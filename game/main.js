@@ -2,6 +2,7 @@ import { Background } from "./background.js";
 import { ClimbingEnemy, FlyingEnemy, GroundEnemy } from "./enemies.js";
 import InpuHandler from "./input.js";
 import Player from "./player.js";
+import { UI } from "./ui.js";
 
 /**@type {HTMLCanvasElement} */
 window.addEventListener("load", function () {
@@ -17,15 +18,22 @@ window.addEventListener("load", function () {
       this.speed = 0;
       this.maxSpeed = 3;
       this.groundMargin = 80;
+      this.UI=new UI(this)
       this.background = new Background(this);
       this.player = new Player(this);
       this.input = new InpuHandler(this);
       this.enemies = [];
       this.enemyTimer = 0;
       this.enemyInterval = 1000;
-      this.debug=true
+      this.debug=false
+      this.score=0
+      this.particles=[]
+     this. fontColor='black'
+     this.player.currentState = this.player.states[0];
+     this.player.currentState.enter();
     }
     update(deltaTime) {
+        console.log(this.particles)
       this.background.update();
       this.player.update(this.input.keys, deltaTime);
       //handle Eneimes
@@ -37,11 +45,19 @@ window.addEventListener("load", function () {
         enemy.update(deltaTime);
         if (enemy.markedForDeletion) this.enemies.splice(this.enemies.indexOf(enemy), 1);
       });
+      this.particles.forEach((particle,index)=>{
+        particle.update()
+        if(particle.markedForDeletion) this.particles.splice(index,1)
+      })
     }
     draw(context) {
       this.background.draw(context);
       this.player.draw(context);
       this.enemies.forEach((enemy) => enemy.draw(context));
+      this.UI.draw(context)
+      this.particles.forEach((particle,index)=>{
+        particle.draw(context)
+      })
     }
     addEnemy() {
       if (this.speed > 0 && Math.random() < 0.5) this.enemies.push(new GroundEnemy(this));

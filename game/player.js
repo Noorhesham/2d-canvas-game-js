@@ -1,4 +1,4 @@
-import { Sitting, Running, Jumping, Falling } from "./playerstates.js";
+import { Sitting, Running, Jumping, Falling, Rolling } from "./playerstates.js";
 
 export default class Player {
   constructor(game) {
@@ -18,11 +18,11 @@ export default class Player {
     this.frameInterval = 1000 / this.fps;
     this.frameTimer = 0;
     this.frameY = 0;
-    this.states = [new Sitting(this), new Running(this), new Jumping(this), new Falling(this)];
-    this.currentState = this.states[0];
-    this.currentState.enter();
+    this.states = [new Sitting(this.game), new Running(this.game), new Jumping(this.game), new Falling(this.game),new Rolling(this.game)];
+
   }
   update(input, deltaTime) {
+    this.checkCollisions()
     this.currentState.handleInput(input);
     this.x += this.speed;
     if (input.includes("ArrowRight")) this.speed = this.maxSpeed;
@@ -42,7 +42,7 @@ export default class Player {
     } else this.frameTimer += deltaTime;
   }
   draw(context) {
-    if(this.game.debug) context.strokeRect(this.x,this.y,this.width,this.height)
+    if (this.game.debug) context.strokeRect(this.x, this.y, this.width, this.height);
     context.drawImage(
       this.image,
       this.frameX * this.width,
@@ -56,12 +56,25 @@ export default class Player {
     );
   }
   onGround() {
-    return this.y >= this.game.height - this.height-this.game.groundMargin;
+    return this.y >= this.game.height - this.height - this.game.groundMargin;
   }
-  setState(state,speed) {
+  setState(state, speed) {
     this.currentState = this.states[state];
-    this.game.speed=this.game.maxSpeed*speed
+    this.game.speed = this.game.maxSpeed * speed;
     this.currentState.enter();
   }
-  checkCollisions(){}
+  checkCollisions() {
+    this.game.enemies.forEach((enemy) => {
+      if (
+        enemy.x < this.x + this.width &&
+        enemy.x + enemy.width > this.x &&
+        enemy.y < this.y + this.height &&
+        enemy.y + enemy.height > this.y
+      ) {
+        enemy.markedForDeletion = true;
+        this.game.score++;
+      } else {
+      }
+    });
+  }
 }
