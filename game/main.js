@@ -8,7 +8,7 @@ import { UI } from "./ui.js";
 window.addEventListener("load", function () {
   const canvas = document.getElementById("canvas1");
   const ctx = canvas.getContext("2d");
-  canvas.width = 500;
+  canvas.width = 1000;
   canvas.height = 500;
 
   class Game {
@@ -49,6 +49,9 @@ window.addEventListener("load", function () {
         particle.update()
         if(particle.markedForDeletion) this.particles.splice(index,1)
       })
+    if(this.particles.length>200){
+        this.particles=this.particles.slice(0,200)
+    }
     }
     draw(context) {
       this.background.draw(context);
