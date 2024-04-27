@@ -1,5 +1,5 @@
 import { Background } from "./background.js";
-import { FlyingEnemy } from "./enemies.js";
+import { ClimbingEnemy, FlyingEnemy, GroundEnemy } from "./enemies.js";
 import InpuHandler from "./input.js";
 import Player from "./player.js";
 
@@ -19,10 +19,11 @@ window.addEventListener("load", function () {
       this.groundMargin = 80;
       this.background = new Background(this);
       this.player = new Player(this);
-      this.input = new InpuHandler();
+      this.input = new InpuHandler(this);
       this.enemies = [];
       this.enemyTimer = 0;
       this.enemyInterval = 1000;
+      this.debug=true
     }
     update(deltaTime) {
       this.background.update();
@@ -43,6 +44,8 @@ window.addEventListener("load", function () {
       this.enemies.forEach((enemy) => enemy.draw(context));
     }
     addEnemy() {
+      if (this.speed > 0 && Math.random() < 0.5) this.enemies.push(new GroundEnemy(this));
+      else if(this.speed>0) this.enemies.push(new ClimbingEnemy(this))
       this.enemies.push(new FlyingEnemy(this));
     }
   }

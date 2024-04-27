@@ -42,6 +42,7 @@ export default class Player {
     } else this.frameTimer += deltaTime;
   }
   draw(context) {
+    if(this.game.debug) context.strokeRect(this.x,this.y,this.width,this.height)
     context.drawImage(
       this.image,
       this.frameX * this.width,
@@ -62,4 +63,5 @@ export default class Player {
     this.game.speed=this.game.maxSpeed*speed
     this.currentState.enter();
   }
+  checkCollisions(){}
 }
