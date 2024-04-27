@@ -1,6 +1,6 @@
 let playerState = "run";
 const dropdown = document.getElementById("animations");
-dropdown.addEventListener("change", function (e) {
+dropdown?.addEventListener("change", function (e) {
   playerState = e.target.value;
 });
 const canvas = document.getElementById("canvas1");
@@ -10,7 +10,7 @@ const CANVAS_WIDTH = (canvas.width = 600);
 const CANVAS_Height = (canvas.height = 600);
 // this is the sprite sheet image
 const playerImage = new Image();
-playerImage.src = "/shadow_dog.png";
+playerImage.src = "./shadow_dog.png";
 //the character or single animation width
 const spriteWidth = 575;
 const spriteHeight = 523;
@@ -91,10 +91,13 @@ function animate() {
   let frameX = spriteWidth * position;
   let frameY = spriteAnimations[playerState].loc[position].y;
   //we are drawing the player image with first the image then the framex(the x are the distance x in  the image itself )
-  //and frame y are how much y travel .. in the image itself 
-  //we calc them by multiplying width in the x in locations array 
+  //and frame y are how much y travel .. in the image itself
+  //we calc them by multiplying width in the x in locations array
   ctx.drawImage(playerImage, frameX, frameY, spriteWidth, spriteHeight, -10, 0, spriteWidth, spriteHeight);
   gameFrame++;
   requestAnimationFrame(animate);
 }
 animate();
+
+//__________________________________________________________________________-
+
